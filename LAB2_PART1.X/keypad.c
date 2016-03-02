@@ -3,6 +3,9 @@
 #include "timer.h"
 #include <stdlib.h>
 
+#define ENABLE_ODC 0
+#define DISABLE_ODC 1
+
 void initKeypad(void){
     
     TRIS_ROW1 = OUTPUT;
@@ -44,31 +47,36 @@ void initKeypad(void){
 }
 
 void enableRowScan(unsigned int scan){
-    if(scan == 1){
-        ROW1 = ENABLED;
-        ROW2 = DISABLED;
-        ROW3 = DISABLED;
-        ROW4 = DISABLED;
+    if(scan == 0){
+        ROW1 = ENABLE_ODC;
+        ROW2 = DISABLE_ODC;
+        ROW3 = DISABLE_ODC;
+        ROW4 = DISABLE_ODC;
+
+    }else if(scan == 1){
+        ROW1 = DISABLE_ODC;
+        ROW2 = ENABLE_ODC;
+        ROW3 = DISABLE_ODC;
+        ROW4 = DISABLE_ODC;
+  
     }else if(scan == 2){
-        ROW1 = DISABLED;
-        ROW2 = ENABLED;
-        ROW3 = DISABLED;
-        ROW4 = DISABLED;
+        ROW1 = DISABLE_ODC;
+        ROW2 = DISABLE_ODC;
+        ROW3 = ENABLE_ODC;
+        ROW4 = DISABLE_ODC;
+        
     }else if(scan == 3){
-        ROW1 = DISABLED;
-        ROW2 = DISABLED;
-        ROW3 = ENABLED;
-        ROW4 = DISABLED;
-    }else if(scan == 4){
-        ROW1 = DISABLED; 
-        ROW2 = DISABLED;
-        ROW3 = DISABLED; 
-        ROW4 = ENABLED;
+        ROW1 = DISABLE_ODC; 
+        ROW2 = DISABLE_ODC;
+        ROW3 = DISABLE_ODC; 
+        ROW4 = ENABLE_ODC;
+
     }else{
-        ROW1 = DISABLED; 
-        ROW2 = DISABLED;
-        ROW3 = DISABLED; 
-        ROW4 = DISABLED;
+        ROW1 = DISABLE_ODC; 
+        ROW2 = DISABLE_ODC;
+        ROW3 = DISABLE_ODC; 
+        ROW4 = DISABLE_ODC;
+       
     } 
 }
 
@@ -83,18 +91,11 @@ char scanKeypad(int row, int col, int presses){
     int ROWS = 4; //four rows
     int COLS = 3; //three columns
     
-    
     char keypad[ROWS][COLS];
-//                              { {'1','2','3'},
-//                                {'4','5','6'},
-//                                {'7','8','9'},
-//                                {'*','0','#'}
-//                              };
     keypad[0][0] = '1'; keypad[0][1] = '2'; keypad[0][2] = '3';
     keypad[1][0] = '4'; keypad[1][1] = '5'; keypad[1][2] = '6';
     keypad[2][0] = '7'; keypad[2][1] = '8'; keypad[2][2] = '9';
     keypad[3][0] = '*'; keypad[3][1] = '0'; keypad[3][2] = '#';
-    
     
     if(presses != 1) return 0; // multiple key presses return 0
     else return keypad[row][col];
